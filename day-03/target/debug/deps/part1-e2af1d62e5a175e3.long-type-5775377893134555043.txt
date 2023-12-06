@@ -1,1 +1,0 @@
-Flatten<Map<Filter<MatchIndices<'_, [closure@src/bin/part1.rs:71:52: 71:69]>, [closure@src/bin/part1.rs:72:45: 72:59]>, [closure@src/bin/part1.rs:73:42: 73:56]>>
