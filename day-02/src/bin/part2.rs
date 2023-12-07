@@ -74,25 +74,26 @@ fn part2(input: &str) -> u32 {
             let mut minimum_number_of_red: u32 = 0;
             let mut minimum_number_of_blue: u32 = 0;
             let mut minimum_number_of_green: u32 = 0;
-                    
-            game.sets
-                .iter()
-                .flatten()
-                .for_each(|cube| match cube {
-                    Cube::Red(amount) => if amount > &minimum_number_of_red {
-                        minimum_number_of_red = *amount;
-                    },
-                    Cube::Blue(amount) => if amount > &minimum_number_of_blue {
-                        minimum_number_of_blue = *amount;
-                    },
-                    Cube::Green(amount) => if amount > &minimum_number_of_green {
-                        minimum_number_of_green = *amount;
-                    },
-                });
 
-            let power_of_cubes = minimum_number_of_red * minimum_number_of_blue * minimum_number_of_green;
-            println!("minimum red: {}, minimum blue: {}, minimum green: {}, power: {}", minimum_number_of_red, minimum_number_of_blue, minimum_number_of_green, power_of_cubes);
-            power_of_cubes
+            game.sets.iter().flatten().for_each(|cube| match cube {
+                Cube::Red(amount) => {
+                    if amount > &minimum_number_of_red {
+                        minimum_number_of_red = *amount;
+                    }
+                }
+                Cube::Blue(amount) => {
+                    if amount > &minimum_number_of_blue {
+                        minimum_number_of_blue = *amount;
+                    }
+                }
+                Cube::Green(amount) => {
+                    if amount > &minimum_number_of_green {
+                        minimum_number_of_green = *amount;
+                    }
+                }
+            });
+
+            minimum_number_of_red * minimum_number_of_blue * minimum_number_of_green
         })
         .sum()
 }

@@ -71,7 +71,8 @@ fn part1(input: &str) -> u32 {
                 .collect::<Vec<Vec<Cube>>>(),
         })
         .filter(|game| {
-            !game.sets
+            !game
+                .sets
                 .iter()
                 .flatten()
                 .map(|cube| match cube {
