@@ -69,34 +69,38 @@ fn part1(input: &str) -> u64 {
         .last()
         .expect("The seeds are after the colon.")
         .split(" ")
-        .map(|seed| seed.trim()
+        .map(|seed| {
+            seed.trim()
                 .parse::<u64>()
                 .expect("Seed should be a number.")
-        )
+        })
         .map(|seed| {
-             let mut output: u64 = seed;
-             conversion_maps
-                 .iter()
-                 .for_each(|conversion_map| {
-                     match conversion_map
-                         .into_iter()
-                         .filter(|conversion_range| 
-                                 output >= conversion_range.source_range_start &&
-                                 output < conversion_range.source_range_start + conversion_range.range_length)
-                         .collect::<Vec<&ConversionMap>>()
-                         .first() {
-                             Some(conversion_range) => {
-                                 output = conversion_range.destination_range_start + (output - conversion_range.source_range_start);
-                             },
-                             None => (),
-                         }
-                 });
-             output
+            let mut output: u64 = seed;
+            conversion_maps.iter().for_each(|conversion_map| {
+                match conversion_map
+                    .into_iter()
+                    .filter(|conversion_range| {
+                        output >= conversion_range.source_range_start
+                            && output
+                                < conversion_range.source_range_start
+                                    + conversion_range.range_length
+                    })
+                    .collect::<Vec<&ConversionMap>>()
+                    .first()
+                {
+                    Some(conversion_range) => {
+                        output = conversion_range.destination_range_start
+                            + (output - conversion_range.source_range_start);
+                    }
+                    None => (),
+                }
+            });
+            output
         })
         .collect::<Vec<u64>>();
 
-        locations.sort();
-        *locations
-            .first()
-            .expect("The locations list will not be empty.")
+    locations.sort();
+    *locations
+        .first()
+        .expect("The locations list will not be empty.")
 }

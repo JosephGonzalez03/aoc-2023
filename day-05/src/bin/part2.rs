@@ -93,7 +93,7 @@ fn part2(input: &str) -> u64 {
                          .for_each(|conversion_map| {
                              match conversion_map
                                  .into_iter()
-                                 .filter(|conversion_range| 
+                                 .filter(|conversion_range|
                                          output >= conversion_range.source_range_start &&
                                          output < conversion_range.source_range_start + conversion_range.range_length)
                                  .collect::<Vec<&ConversionMap>>()
@@ -111,8 +111,8 @@ fn part2(input: &str) -> u64 {
         })
         .collect::<Vec<u64>>();
 
-        locations.sort();
-        *locations
-            .first()
-            .expect("The locations list will not be empty.")
+    locations.sort();
+    *locations
+        .first()
+        .expect("The locations list will not be empty.")
 }
