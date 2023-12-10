@@ -47,17 +47,18 @@ impl PartialOrd for Hand {
         match hand_type(&self.0).cmp(&hand_type(&other.0)) {
             Ordering::Greater => Some(Ordering::Greater),
             Ordering::Less => Some(Ordering::Less),
-            Ordering::Equal => self.0
-                    .iter()
-                    .zip(other.0.iter())
-                    .map(|(self_card, other_card)| self_card.partial_cmp(&other_card))
-                    .flatten()
-                    .filter(|comparison| comparison != &Ordering::Equal)
-                    .collect::<Vec<Ordering>>()
-                    .first()
-                    .copied(),
-            }
+            Ordering::Equal => self
+                .0
+                .iter()
+                .zip(other.0.iter())
+                .map(|(self_card, other_card)| self_card.partial_cmp(&other_card))
+                .flatten()
+                .filter(|comparison| comparison != &Ordering::Equal)
+                .collect::<Vec<Ordering>>()
+                .first()
+                .copied(),
         }
+    }
 }
 
 fn hand_type(hand: &Vec<Card>) -> HandType {
@@ -89,12 +90,7 @@ fn hand_type(hand: &Vec<Card>) -> HandType {
             1 => HandType::ThreeOfAKind,
             _ => panic!("The hand has more than 5 cards."),
         },
-        2 => match card_map
-            .values()
-            .into_iter()
-            .collect::<Vec<&u32>>()
-            .len()
-        {
+        2 => match card_map.values().into_iter().collect::<Vec<&u32>>().len() {
             3 => HandType::TwoPair,
             4 => HandType::OnePair,
             _ => panic!("The hand has more than 5 cards."),
@@ -110,29 +106,30 @@ fn part1(input: &str) -> u32 {
         .collect::<Vec<&str>>()
         .into_iter()
         .map(|line| Player {
-            hand: Hand(line
-                .split(" ")
-                .collect::<Vec<&str>>()
-                .first()
-                .expect("Hand does exist.")
-                .chars()
-                .map(|card| match card {
-                    '2' => Card::Two,
-                    '3' => Card::Three,
-                    '4' => Card::Four,
-                    '5' => Card::Five,
-                    '6' => Card::Six,
-                    '7' => Card::Seven,
-                    '8' => Card::Eight,
-                    '9' => Card::Nine,
-                    'T' => Card::Ten,
-                    'J' => Card::Jack,
-                    'Q' => Card::Queen,
-                    'K' => Card::King,
-                    'A' => Card::Ace,
-                    _ => panic!("Invalid card."),
-                })
-                .collect::<Vec<Card>>()),
+            hand: Hand(
+                line.split(" ")
+                    .collect::<Vec<&str>>()
+                    .first()
+                    .expect("Hand does exist.")
+                    .chars()
+                    .map(|card| match card {
+                        '2' => Card::Two,
+                        '3' => Card::Three,
+                        '4' => Card::Four,
+                        '5' => Card::Five,
+                        '6' => Card::Six,
+                        '7' => Card::Seven,
+                        '8' => Card::Eight,
+                        '9' => Card::Nine,
+                        'T' => Card::Ten,
+                        'J' => Card::Jack,
+                        'Q' => Card::Queen,
+                        'K' => Card::King,
+                        'A' => Card::Ace,
+                        _ => panic!("Invalid card."),
+                    })
+                    .collect::<Vec<Card>>(),
+            ),
             bid: line
                 .split(" ")
                 .collect::<Vec<&str>>()
@@ -143,7 +140,12 @@ fn part1(input: &str) -> u32 {
                 .expect("Bid is a number."),
         })
         .collect::<Vec<Player>>();
-    players.sort_by(|player1, player2| player1.hand.partial_cmp(&player2.hand).expect("The hands are comparable."));
+    players.sort_by(|player1, player2| {
+        player1
+            .hand
+            .partial_cmp(&player2.hand)
+            .expect("The hands are comparable.")
+    });
     players
         .into_iter()
         .enumerate()
