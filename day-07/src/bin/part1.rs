@@ -34,54 +34,22 @@ enum Card {
     Ace,
 }
 
-#[derive(Debug, Eq)]
+#[derive(Debug, Eq, Ord, Hash, PartialEq)]
+struct Hand(Vec<Card>);
+
 struct Player {
-    hand: Vec<Card>,
+    hand: Hand,
     bid: u32,
 }
 
-impl PartialEq for Player {
-    fn eq(&self, other: &Self) -> bool {
-        match self
-            .hand
-            .iter()
-            .zip(other.hand.iter())
-            .map(|(self_card, other_card)| self_card.cmp(&other_card))
-            .filter(|ordering| ordering != &Ordering::Equal)
-            .collect::<Vec<Ordering>>()
-            .first()
-        {
-            Some(_) => false,
-            None => true,
-        }
-    }
-}
-
-impl Ord for Player {
-    fn cmp(&self, other: &Self) -> Ordering {
-        match self
-            .hand
-            .iter()
-            .zip(other.hand.iter())
-            .map(|(self_card, other_card)| self_card.cmp(&other_card))
-            .filter(|ordering| ordering != &Ordering::Equal)
-            .collect::<Vec<Ordering>>()
-            .first()
-        {
-            Some(ordering) => *ordering,
-            None => Ordering::Equal,
-        }
-    }
-}
-
-impl PartialOrd for Player {
+impl PartialOrd for Hand {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        match hand_type(&self.hand).cmp(&hand_type(&other.hand)) {
+        match hand_type(&self.0).cmp(&hand_type(&other.0)) {
             Ordering::Greater => Some(Ordering::Greater),
             Ordering::Less => Some(Ordering::Less),
-            Ordering::Equal => self.hand
+            Ordering::Equal => self.0
                     .iter()
-                    .zip(other.hand.iter())
+                    .zip(other.0.iter())
                     .map(|(self_card, other_card)| self_card.partial_cmp(&other_card))
                     .flatten()
                     .filter(|comparison| comparison != &Ordering::Equal)
@@ -142,7 +110,7 @@ fn part1(input: &str) -> u32 {
         .collect::<Vec<&str>>()
         .into_iter()
         .map(|line| Player {
-            hand: line
+            hand: Hand(line
                 .split(" ")
                 .collect::<Vec<&str>>()
                 .first()
@@ -164,7 +132,7 @@ fn part1(input: &str) -> u32 {
                     'A' => Card::Ace,
                     _ => panic!("Invalid card."),
                 })
-                .collect::<Vec<Card>>(),
+                .collect::<Vec<Card>>()),
             bid: line
                 .split(" ")
                 .collect::<Vec<&str>>()
@@ -175,8 +143,7 @@ fn part1(input: &str) -> u32 {
                 .expect("Bid is a number."),
         })
         .collect::<Vec<Player>>();
-    players.sort();
-    //players.iter().for_each(|player| println!("{:?}", player));
+    players.sort_by(|player1, player2| player1.hand.partial_cmp(&player2.hand).expect("The hands are comparable."));
     players
         .into_iter()
         .enumerate()
