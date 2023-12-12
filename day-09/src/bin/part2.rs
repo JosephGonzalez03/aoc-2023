@@ -4,7 +4,7 @@ fn main() {
 }
 
 fn solution(input: &str) -> i32 {
-    let dataset_histories = input
+    input
         .split_terminator("\n")
         .collect::<Vec<&str>>()
         .into_iter()
@@ -21,10 +21,6 @@ fn solution(input: &str) -> i32 {
                 .rev()
                 .collect::<Vec<i32>>()
         })
-        .collect::<Vec<Vec<i32>>>();
-
-    dataset_histories
-        .into_iter()
         .map(|history| {
             let mut difference_sequences: Vec<Vec<i32>> = vec![history.clone()];
             let mut next_difference_sequence: Vec<i32> = history;
